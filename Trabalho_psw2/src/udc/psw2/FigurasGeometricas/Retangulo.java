@@ -55,7 +55,7 @@ public class Retangulo extends FiguraGeometrica {
 	public double altura(){
 		return Math.abs(a.getY() - b.getY());
 	}
-	
+	 
 	public float area(){
 		return  0;
 	}
@@ -107,10 +107,11 @@ public class Retangulo extends FiguraGeometrica {
 				(int) base(), (int) altura() );
 	}
 	protected String normalString() {
-		return String.format("[%d %d %d %d]",(int)a.getX(),(int)b.getX(),(int)a.getY(),(int)b.getY());
+		return String.format("[%d %d %d %d %d %d %d %d]",(int)a.getX(),(int)a.getY(),(int)b.getX(),(int)a.getY(),(int)a.getX(),(int)b.getY(),(int)b.getX(),(int)b.getY());
 	}
 	protected String verboselString() {
-		return String.format("Retangulo %d %d %d %d",(int)a.getX(),(int)b.getX(),(int)a.getY(),(int)b.getY());
+		return String.format("Retangulo %d %d %d %d %d %d %d %d",(int)a.getX(),(int)a.getY(),(int)b.getX(),(int)a.getY(),(int)a.getX(),(int)b.getY(),(int)b.getX(),(int)b.getY());
+		//return String.format("Retangulo %d %d %d %d",(int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
 	}
 
 }

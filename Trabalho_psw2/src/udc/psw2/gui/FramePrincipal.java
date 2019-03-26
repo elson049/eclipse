@@ -48,7 +48,7 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.WEST);
 
-		textArea = new JTextArea(8,16);
+		textArea = new JTextArea(8,22);
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(false);
 		App.getApp().inserirOuvinte(this);
@@ -121,7 +121,13 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 		JMenuItem mntmLerBinario = new JMenuItem("Ler (Binario)");
 		mntmLerBinario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				File f = escolherArquivo();
+				if(f == null)
+					return;
+				App.getApp().LimparPainel();
+				painel.LerBinario(f);
+				atualizarFigura();
+				painel.repaint();
 			}
 
 		});

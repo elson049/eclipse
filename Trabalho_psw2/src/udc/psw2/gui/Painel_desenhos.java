@@ -232,16 +232,50 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		String msg= new String(); 
 		try {
 			FileOutputStream fout = new FileOutputStream(file);
-			
+
 			Iterador<FiguraGeometrica> it =App.getApp().getIndice();
 			FiguraGeometrica formaAux;
 			formaAux = it.getObject();
 			while (formaAux!= null) {
 				formaAux.setEstado(FiguraGeometrica.VERBOSE);
-				//byte[] bytes =formaAux.toString()+"\n";
+				msg=formaAux.toString()+"\n";
 				fout.write(msg.getBytes());
 				formaAux = it.proximo();
 			}
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+	public void LerBinario(File file) {
+		String str= new String();
+		int i;
+		int aux=0;
+		int cont=0;
+
+		while (!App.getApp().Lista_vazia()) {
+			App.getApp().EscruirInicio();
+		}
+		try {
+			FileInputStream fin = new FileInputStream(file);
+			do {
+				i=fin.read();
+				if(i != -1) {
+					if(i != '\n') {
+						str+=(char)(i);
+					}else {
+						str+=(char)(i);
+						if(cont == aux) {
+							FiguraGeometrica formaAux = FabricarFormas.fabricarFormaGeometrica(str);
+							App.getApp().inserirFormaGeometrica(formaAux);
+
+						}
+						cont++;
+						aux++;
+						str=null;
+						str= new String();
+					}
+				}
+			}while(i != -1);
 		} catch (IOException ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -250,3 +284,4 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		repaint();
 	}
 }
+

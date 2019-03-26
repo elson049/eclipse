@@ -77,7 +77,7 @@ public class Ponto extends FiguraGeometrica{
 	}
 
 	protected String normalString() {
-		return String.format("(%d %d",(int)x,(int)y);
+		return String.format("%d %d",(int)x,(int)y);
 	}
 	protected String verboselString() {
 		return String.format("Ponto %d %d",(int)x,(int)y);
