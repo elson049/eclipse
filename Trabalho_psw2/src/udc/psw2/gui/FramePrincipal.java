@@ -23,6 +23,9 @@ import udc.psw2.FigurasGeometricas.Linha;
 import udc.psw2.FigurasGeometricas.Ponto;
 import udc.psw2.FigurasGeometricas.Retangulo;
 import udc.psw2.aplicacao.App;
+import udc.psw2.arquivo.ArquivoBinario;
+import udc.psw2.arquivo.ArquivoSerializado;
+import udc.psw2.arquivo.ArquivoTexto;
 import udc.psw2.lista.Iterador;
 import udc.psw2.lista.OuvinteLista;
 
@@ -36,7 +39,9 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 	private Painel_desenhos painel;
 	private JLabel status;
 	private boolean aux=false;
-
+	private ArquivoTexto arqtexto;
+	private ArquivoSerializado arqserial;
+	private ArquivoBinario arqbin;
 
 	public FramePrincipal() {
 		
@@ -52,7 +57,7 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(false);
 		App.getApp().inserirOuvinte(this);
-		//textArea.setEditable(false);
+
 
 		status = new JLabel("Area de mensagens");
 		contentPane.add(status,BorderLayout.SOUTH);
@@ -60,9 +65,6 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 		painel = new Painel_desenhos(status);
 		contentPane.add(painel,BorderLayout.CENTER);
 		App.getApp().inserirOuvinte(painel);
-
-		//painel1 = new PainelDesenho(app);
-		//contentPane.add(painel1,BorderLayout.CENTER);
 
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
@@ -125,7 +127,8 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				if(f == null)
 					return;
 				App.getApp().LimparPainel();
-				painel.LerBinario(f);
+				arqbin = new ArquivoBinario(f);
+				arqbin.LerBinario();
 				atualizarFigura();
 				painel.repaint();
 			}
@@ -140,7 +143,8 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				if(f == null)
 					return;
 				App.getApp().LimparPainel();
-				painel.lerSerial(f);
+				arqserial = new ArquivoSerializado(f);
+				arqserial.lerSerial();
 				atualizarFigura();
 				painel.repaint();
 			}
@@ -154,7 +158,8 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				if(f == null)
 					return;
 				App.getApp().LimparPainel();
-				painel.lerTexto(f);
+				arqtexto = new ArquivoTexto(f);
+				arqtexto.lerTexto();
 				atualizarFigura();
 				painel.repaint();
 			}
@@ -170,7 +175,8 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				File f = escolherArquivo();
 				if(f == null)
 					return;
-				painel.SalvarBinario(f);
+				arqbin = new ArquivoBinario(f);
+				arqbin.SalvarBinario();
 			}
 		});
 		barraGravar.add(mntmSalvarBinario);
@@ -181,7 +187,8 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				File f = escolherArquivo();
 				if(f == null)
 					return;
-				painel.salvarSerial(f);
+				arqserial = new ArquivoSerializado(f);
+				arqserial.salvarSerial();
 			}
 		});
 		barraGravar.add(mntmSalvarSerial);
@@ -192,7 +199,8 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				File f = escolherArquivo();
 				if(f == null)
 					return;
-				painel.salvarTexto(f);
+				arqtexto = new ArquivoTexto(f);
+				arqtexto.salvarTexto();
 			}
 		});
 		barraGravar.add(mntmSalvarTexto);

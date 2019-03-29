@@ -4,21 +4,10 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Scanner;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import udc.psw2.FigurasGeometricas.FabricarFormas;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Ponto;
 import udc.psw2.aplicacao.App;
@@ -38,7 +27,6 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	private boolean aux2=false;
 	private ManipuladorFormaGeometrica manipulador;
 	private FiguraGeometrica forma;
-
 
 	public Painel_desenhos(JLabel status) {
 		this.status=status;
@@ -69,7 +57,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 			FiguraGeometrica ponto = new Ponto((float)e.getX(),(float)e.getY());
 			ponto.setEstado(FiguraGeometrica.VERBOSE);
 			App.getApp().inserirFormaGeometrica(ponto);
-			repaint(); // repinta JFrame
+			repaint();
 		}
 	}
 	public void setFormaGeometrica(FiguraGeometrica forma) {
@@ -141,145 +129,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 			repaint();
 		}
 	}
-	public void salvarTexto(File f) {
-		FileWriter output;
-
-		try {
-
-			output = new FileWriter(f);
-
-			Iterador<FiguraGeometrica> i =App.getApp().getIndice();
-			FiguraGeometrica g;
-			while((g = (FiguraGeometrica)i.proximo()) != null) {
-				g.setEstado(FiguraGeometrica.VERBOSE);
-				output.append(g.toString()+"\n");
-			}
-
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-
-		}
-	}
-	public void lerTexto(File f) {
-		Scanner input=null;
-		while (!App.getApp().Lista_vazia()) {
-			App.getApp().EscruirInicio();
-		}
-		try {
-			input= new Scanner(f);
-			while (input.hasNextLine()) {
-				String linha = input.nextLine();
-				FiguraGeometrica formaAux = FabricarFormas.fabricarFormaGeometrica(linha);
-				App.getApp().inserirFormaGeometrica(formaAux);
-			}
-			input.close();
-
-		} 
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	public void salvarSerial(File file) {
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-
-			Iterador<FiguraGeometrica> it =App.getApp().getIndice();
-			FiguraGeometrica f;
-			f = it.getObject();
-			while (f!= null) {
-				oos.writeObject(f);
-				f = it.proximo();
-			}
-
-			oos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	public void lerSerial(File file) {
-		// Criar um m�todo na lista para realizar esta opera��o
-
-		while (!App.getApp().Lista_vazia()) {
-			App.getApp().EscruirInicio();
-		}
-		FiguraGeometrica formaAux1 = null;
-		ObjectInputStream ois = null;
-
-		try {
-			ois = new ObjectInputStream(new FileInputStream(file));
-			while (true) {
-				formaAux1 = (FiguraGeometrica) ois.readObject();
-
-				App.getApp().inserirFormaGeometrica(formaAux1);
-			}
-		} catch (EOFException endOfFileException) {
-			try {
-				ois.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} // fim do arquivo foi alcan�ado
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	public void SalvarBinario(File file) {
-		String msg= new String(); 
-		try {
-			FileOutputStream fout = new FileOutputStream(file);
-
-			Iterador<FiguraGeometrica> it =App.getApp().getIndice();
-			FiguraGeometrica formaAux;
-			formaAux = it.getObject();
-			while (formaAux!= null) {
-				formaAux.setEstado(FiguraGeometrica.VERBOSE);
-				msg=formaAux.toString()+"\n";
-				fout.write(msg.getBytes());
-				formaAux = it.proximo();
-			}
-		} catch (IOException ex) {
-			System.out.println(ex.getMessage());
-		}
-	}
-	public void LerBinario(File file) {
-		String str= new String();
-		int i;
-		int aux=0;
-		int cont=0;
-
-		while (!App.getApp().Lista_vazia()) {
-			App.getApp().EscruirInicio();
-		}
-		try {
-			FileInputStream fin = new FileInputStream(file);
-			do {
-				i=fin.read();
-				if(i != -1) {
-					if(i != '\n') {
-						str+=(char)(i);
-					}else {
-						str+=(char)(i);
-						if(cont == aux) {
-							FiguraGeometrica formaAux = FabricarFormas.fabricarFormaGeometrica(str);
-							App.getApp().inserirFormaGeometrica(formaAux);
-
-						}
-						cont++;
-						aux++;
-						str=null;
-						str= new String();
-					}
-				}
-			}while(i != -1);
-		} catch (IOException ex) {
-			System.out.println(ex.getMessage());
-		}
-	}
+	
 	public void atualizarFigura() {
 		repaint();
 	}
