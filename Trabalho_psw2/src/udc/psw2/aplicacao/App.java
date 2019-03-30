@@ -31,7 +31,7 @@ public class App {
 		listaOuvinte.inserir(ouvinte,0);
 	}
 	public void inserirFormaGeometrica(FiguraGeometrica forma) {
-		listaFiguras.inserir(forma,100);
+		listaFiguras.inserir(forma,0);
 		Iterador<OuvinteLista> i =listaOuvinte.getInicio();
 		OuvinteLista ouvinte;
 		while((ouvinte = (OuvinteLista)i.proximo()) != null) {
@@ -50,7 +50,7 @@ public class App {
 	}
 	public void LimparPainel() {
 		listaFiguras.limpar();
-		//listaOuvinte.limpar();
+		listaOuvinte.limpar();
 	}
 	public static void main(String[] args) {
 		
