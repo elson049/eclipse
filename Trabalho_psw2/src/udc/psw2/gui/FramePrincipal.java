@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import udc.psw2.FigurasGeometricas.Circulo;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Linha;
 import udc.psw2.FigurasGeometricas.Ponto;
@@ -250,6 +251,20 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 			}
 		});
 		barraFiguras.add(mntmRetangulo);
+		
+		JMenuItem mntmcirculo = new JMenuItem("Circulo");
+		mntmcirculo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//if(aux ==true) {
+				//	FiguraGeometrica r = new Retangulo(lerPonto(),lerPonto());
+					//r.setEstado(FiguraGeometrica.VERBOSE);
+					//App.getApp().inserirFormaGeometrica(r);
+			//	}
+				Circulo circulo = new Circulo();
+				painel.setFormaGeometrica(circulo);
+			}
+		});
+		barraFiguras.add(mntmcirculo);
 	}
 	public static Ponto lerPonto() {
 		String strX = JOptionPane.showInputDialog("Digite o acoordenada x:");
