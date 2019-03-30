@@ -40,23 +40,22 @@ public class FabricarFormas {
 		return p;
 	}
 	public static Retangulo fabricarRetangulo(String retangulo) {
-		/*
-		 * String str1=null; String str2=null; String str3=null; int cont=0;
-		 * System.out.println(linha); str1 = linha.substring(linha.indexOf(' ')+1); str2
-		 * = str1.substring(str1.indexOf(' ')+1); str3 = str2.substring(str2.indexOf('
-		 * ')+1); cont = cont+str3.indexOf(' ')+str1.indexOf(' ')+str2.indexOf('
-		 * ')+linha.indexOf(' ')+3; Ponto p1 = fabricarPonto(linha.substring(0, 11));
-		 * Ponto p2 = fabricarPonto(linha.substring(11+1)); Linha l =null;//new
-		 * Linha(p1,p2); //l.setEstado(FiguraGeometrica.VERBOSE);
-		 */			
-		int i = retangulo.indexOf(')');
-		Ponto p1 = fabricarPonto(retangulo.substring(0,i));
-		Ponto p2 = fabricarPonto(retangulo.substring(i+1));
-
-		Retangulo r = new Retangulo(p1,p2);
-
-		System.out.println(r.getClass().getSimpleName()+" "+r.toString());
-		return null;
+		String str1=null; 
+		String str2=null; 
+		String str3=null; 
+		int cont=0;
+		
+		str1 = retangulo.substring(retangulo.indexOf(' ')+1); 
+		str2 = str1.substring(str1.indexOf(' ')+1);
+		str3 = str2.substring(str2.indexOf(' ')+1);  
+		cont = cont+str3.indexOf(' ')+str1.indexOf(' ')+str2.indexOf(' ')+retangulo.indexOf(' ')+3;
+ 
+		Linha l1 = fabricarLinha(retangulo.substring(0, cont));
+		Linha l2 = fabricarLinha(retangulo.substring(cont+1)); 
+		
+		Retangulo r = new Retangulo(l1.getA().getX(),l1.getA().getY(),l2.getB().getX(),l2.getB().getY());
+		r.setEstado(FiguraGeometrica.VERBOSE);
+		return r;
 	}
 
 }
