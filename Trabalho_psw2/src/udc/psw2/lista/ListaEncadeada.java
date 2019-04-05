@@ -228,6 +228,33 @@ public class ListaEncadeada<Tipo> {
 		return aux.obj;
 	
 	}
+	public Tipo remover(Tipo obj) {
+		if (obj == null)
+			return null;
+
+		if (obj == inicio.obj) { // remover inicio
+			return excluirInicio();
+		}
+
+		if (obj == fim.obj) { // remover o fim
+			return excluirFim();
+		}
+
+		No aux = inicio;
+
+		// remover no do meio da lista
+		while (obj != aux.obj) {
+			aux = aux.proximo;
+		}
+
+		Tipo dado = aux.obj;
+
+		aux.anterior.proximo = aux.proximo;
+		aux.proximo.anterior = aux.anterior;
+
+		tamanho--;
+		return dado;
+	}
 	public void LimpaRemover() {
 		while(inicio != null)
 			excluirFim();
