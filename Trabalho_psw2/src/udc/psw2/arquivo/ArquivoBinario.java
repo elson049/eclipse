@@ -8,10 +8,10 @@ import java.io.RandomAccessFile;
 
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Ponto;
-import udc.psw2.aplicacao.App;
 import udc.psw2.lista.Iterador;
+import udc.psw2.lista.ListaEncadeada;
 
-public class ArquivoBinario {
+public class ArquivoBinario implements ArquivoFormasGeometrica{
 	
 	private static RandomAccessFile raf;
 	private File file;
@@ -19,29 +19,10 @@ public class ArquivoBinario {
 	public ArquivoBinario(File file) {
 		this.file=file;
 	}
-	
-	public void SalvarBinario() {
-		try {
-			raf = new RandomAccessFile(file,"rw");
-		}catch (FileNotFoundException e) {
-			System.out.println("Arquivo Inexistente");
-			System.exit(0);
-		}
-		try {
-			Iterador<FiguraGeometrica> it =App.getApp().getIndice();
-			FiguraGeometrica f;
-			while((f = (FiguraGeometrica)it.proximo()) != null) {
-				raf.writeByte(1);
-				raf.writeInt((int)f.getX());
-				raf.writeInt((int)f.getY());
-			}
-			raf.close();
-		}catch(IOException e){
-			System.out.println("Erro escrever no arquivo");
-		}
-	}
-	public void LerBinario() {
-
+	@Override
+	public ListaEncadeada<FiguraGeometrica> lerFormas() {
+		ListaEncadeada<FiguraGeometrica> lista = new ListaEncadeada<FiguraGeometrica>();
+		
 		try {
 			raf = new RandomAccessFile(file,"r");
 		}catch(FileNotFoundException e) {
@@ -56,7 +37,7 @@ public class ArquivoBinario {
 				float y =(float)raf.readInt();
 				Ponto ponto = new Ponto(x,y);
 				ponto.setEstado(FiguraGeometrica.VERBOSE);
-				App.getApp().inserirFormaGeometrica(ponto);
+				lista.inserir(ponto,0);
 				
 			}catch(EOFException e) {
 				break;
@@ -64,5 +45,29 @@ public class ArquivoBinario {
 				break;
 			}
 		}
+		return lista;
+	}
+
+	@Override
+	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {
+		try {
+			raf = new RandomAccessFile(file,"rw");
+		}catch (FileNotFoundException e) {
+			System.out.println("Arquivo Inexistente");
+			System.exit(0);
+		}
+		try {
+			Iterador<FiguraGeometrica> it =lista.getInicio();
+			FiguraGeometrica f;
+			while((f = (FiguraGeometrica)it.proximo()) != null) {
+				raf.writeByte(1);
+				raf.writeInt((int)f.getX());
+				raf.writeInt((int)f.getY());
+			}
+			raf.close();
+		}catch(IOException e){
+			System.out.println("Erro escrever no arquivo");
+		}
+		
 	}
 }

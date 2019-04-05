@@ -11,8 +11,9 @@ import java.io.ObjectOutputStream;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.aplicacao.App;
 import udc.psw2.lista.Iterador;
+import udc.psw2.lista.ListaEncadeada;
 
-public class ArquivoSerializado {
+public class ArquivoSerializado implements ArquivoFormasGeometrica{
 	private File file;
 	
 	public ArquivoSerializado(File file) {
@@ -61,5 +62,15 @@ public class ArquivoSerializado {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public ListaEncadeada<FiguraGeometrica> lerFormas() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {
+		// TODO Auto-generated method stub
+		
 	}
 }
