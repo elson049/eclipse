@@ -10,13 +10,13 @@ import javax.swing.JPanel;
 
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Ponto;
-import udc.psw2.aplicacao.App;
+import udc.psw2.aplicacao.Documento;
 import udc.psw2.lista.Iterador;
 import udc.psw2.lista.OuvinteLista;
 import udc.psw2.manipulador.ManipuladorFormaGeometrica;
 
 
-public class Painel_desenhos extends JPanel implements MouseMotionListener, MouseListener,OuvinteLista  {
+public class Painel_desenhos extends JPanel implements MouseMotionListener, MouseListener,PainelOuvinteForma  {
 	/**
 	 * 
 	 */
@@ -27,9 +27,11 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	private boolean aux2=false;
 	private ManipuladorFormaGeometrica manipulador;
 	private FiguraGeometrica forma;
+	private Documento doc;
 
-	public Painel_desenhos(JLabel status) {
+	public Painel_desenhos(JLabel status,Documento doc) {
 		this.status=status;
+		this.doc=doc;
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 	}
@@ -40,7 +42,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		if (forma != null)
 			manipulador.paint(g);
 
-		Iterador<FiguraGeometrica> i =App.getApp().getIndice();
+		Iterador<FiguraGeometrica> i =doc.getIndice();
 		FiguraGeometrica f;
 		while((f = (FiguraGeometrica)i.proximo()) != null) {
 			f.paint(g);
@@ -56,7 +58,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		if(aux == true && aux2 == false) {
 			FiguraGeometrica ponto = new Ponto((float)e.getX(),(float)e.getY());
 			ponto.setEstado(FiguraGeometrica.VERBOSE);
-			App.getApp().inserirFormaGeometrica(ponto);
+			doc.inserirFormaGeometrica(ponto);
 			repaint();
 		}
 	}
@@ -119,7 +121,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		if (desenhando && aux == false && aux2 == false) {
 			manipulador.release(e.getX(), e.getY());
 			forma.setEstado(FiguraGeometrica.VERBOSE);
-			App.getApp().inserirFormaGeometrica(forma);
+			doc.inserirFormaGeometrica(forma);
 
 			desenhando = false;
 
@@ -129,9 +131,9 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 			repaint();
 		}
 	}
-	
-	public void atualizarFigura() {
+	public void atualizar() {
 		repaint();
+		
 	}
 }
 
