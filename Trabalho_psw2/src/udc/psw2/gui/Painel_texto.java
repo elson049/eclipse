@@ -6,7 +6,6 @@ import javax.swing.JTextArea;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.aplicacao.Documento;
 import udc.psw2.lista.Iterador;
-import udc.psw2.lista.OuvinteLista;
 
 public class Painel_texto extends JTextArea implements PainelOuvinteForma{
 

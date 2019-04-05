@@ -12,7 +12,6 @@ import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Ponto;
 import udc.psw2.aplicacao.Documento;
 import udc.psw2.lista.Iterador;
-import udc.psw2.lista.OuvinteLista;
 import udc.psw2.manipulador.ManipuladorFormaGeometrica;
 
 
