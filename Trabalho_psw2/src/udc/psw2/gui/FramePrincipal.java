@@ -1,6 +1,7 @@
 package udc.psw2.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,7 +15,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -23,50 +23,56 @@ import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Linha;
 import udc.psw2.FigurasGeometricas.Ponto;
 import udc.psw2.FigurasGeometricas.Retangulo;
-import udc.psw2.aplicacao.App;
-import udc.psw2.arquivo.ArquivoBinario;
-import udc.psw2.arquivo.ArquivoSerializado;
-import udc.psw2.arquivo.ArquivoTexto;
+import udc.psw2.aplicacao.Documento;
 import udc.psw2.lista.Iterador;
-import udc.psw2.lista.OuvinteLista;
 
 
 
-public class FramePrincipal extends JFrame implements OuvinteLista{
+public class FramePrincipal extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
-	private JTextArea textArea;
 	private Painel_desenhos painel;
+	private Painel_texto texto;
 	private JLabel status;
+	private Documento doc;
+	private JPanel contentPane;
 	private boolean aux=false;
-	private ArquivoTexto arqtexto;
-	private ArquivoSerializado arqserial;
-	private ArquivoBinario arqbin;
 
-	public FramePrincipal() {
-		
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5,5,5,5));
+	public FramePrincipal(Documento doc) {
+		this.doc=doc;
+
+		contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(3,3));
-
-		JScrollPane scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, BorderLayout.WEST);
-
-		textArea = new JTextArea(8,22);
-		scrollPane.setViewportView(textArea);
-		textArea.setEditable(false);
-		App.getApp().inserirOuvinte(this);
 
 
-		status = new JLabel("Area de mensagens");
-		contentPane.add(status,BorderLayout.SOUTH);
+		contentPane.setBackground(Color.WHITE); // configura cor de fundo
+		status = new JLabel( "�rea de mensagens!" );           
+		contentPane.add( status, BorderLayout.SOUTH ); // adiciona r�tulo ao JFrame
 
-		painel = new Painel_desenhos(status);
-		contentPane.add(painel,BorderLayout.CENTER);
-		App.getApp().inserirOuvinte(painel);
+		painel = new Painel_desenhos(status,doc);
+		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		painel.setLayout(null);
+		JScrollPane scrollDesenho = new JScrollPane();
+		scrollDesenho.setViewportView(painel);
+		contentPane.add(scrollDesenho, BorderLayout.CENTER);
 
+		// Adiciona objeto Observador na lista de observadores do objeto Subject do padr�o Observer
+		doc.adicionarOuvinte(painel);
+
+		// Inicializa painel de texto
+		JScrollPane scrollTexto = new JScrollPane();
+		contentPane.add(scrollTexto, BorderLayout.WEST);
+		texto = new Painel_texto(doc);
+		scrollTexto.setViewportView(texto);
+		texto.setEditable(false);
+		
+		// Adiciona objeto Observador na lista de observadores do objeto Subject do padr�o Observer
+		doc.adicionarOuvinte(texto);	
+		
+		setBounds(50, 50, 850, 650); // Posi��o e tamanho da janela
+		
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 
@@ -99,16 +105,39 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 			}
 		});
 		barraArquivo.add(mntmInserir);
-		
+
 		JMenuItem mntmLimpar = new JMenuItem("Limpar painel");
 		mntmLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				App.getApp().LimparPainel();
+				doc.LimparPainel();
 				atualizarFigura();
+				atualizarTexto();
 				repaint();
 			}
 		});
 		barraArquivo.add(mntmLimpar);
+
+		JMenuItem mntmLer = new JMenuItem("Ler");
+		mntmLer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//File f = escolherArquivo();
+				//if(f == null)
+				//	return;
+			}
+
+		});
+		barraArquivo.add(mntmLer);
+
+		JMenuItem mntmSalvar = new JMenuItem("Salvar");
+		mntmSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = escolherArquivo();
+				if(f == null)
+					return;
+			}
+		});
+		barraArquivo.add(mntmSalvar);
+
 
 		JMenuItem mntmSair = new JMenuItem("Sair");
 		mntmSair.addActionListener(new ActionListener() {
@@ -118,93 +147,6 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 		});
 		barraArquivo.add(mntmSair);
 
-		JMenu barraLer = new JMenu("Ler Arquivo");
-		menubar.add(barraLer);
-
-		JMenuItem mntmLerBinario = new JMenuItem("Ler (Binario)");
-		mntmLerBinario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				File f = escolherArquivo();
-				if(f == null)
-					return;
-				App.getApp().LimparPainel();
-				arqbin = new ArquivoBinario(f);
-				arqbin.LerBinario();
-				atualizarFigura();
-				painel.repaint();
-			}
-
-		});
-		barraLer.add(mntmLerBinario);
-
-		JMenuItem mntmLerSerial = new JMenuItem("Ler (serial)");
-		mntmLerSerial.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				File f = escolherArquivo();
-				if(f == null)
-					return;
-				App.getApp().LimparPainel();
-				arqserial = new ArquivoSerializado(f);
-				arqserial.lerSerial();
-				atualizarFigura();
-				painel.repaint();
-			}
-		});
-		barraLer.add(mntmLerSerial);
-
-		JMenuItem mntmLerTexto = new JMenuItem("Ler (texto)");
-		mntmLerTexto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				File f = escolherArquivo();
-				if(f == null)
-					return;
-				App.getApp().LimparPainel();
-				arqtexto = new ArquivoTexto(f);
-				arqtexto.lerTexto();
-				atualizarFigura();
-				painel.repaint();
-			}
-		});
-		barraLer.add(mntmLerTexto);
-
-		JMenu barraGravar = new JMenu("Gravar Arquivo");
-		menubar.add(barraGravar);
-
-		JMenuItem mntmSalvarBinario = new JMenuItem("Salvar (Binario)");
-		mntmSalvarBinario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				File f = escolherArquivo();
-				if(f == null)
-					return;
-				arqbin = new ArquivoBinario(f);
-				arqbin.SalvarBinario();
-			}
-		});
-		barraGravar.add(mntmSalvarBinario);
-
-		JMenuItem mntmSalvarSerial = new JMenuItem("Salvar (serial)");
-		mntmSalvarSerial.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				File f = escolherArquivo();
-				if(f == null)
-					return;
-				arqserial = new ArquivoSerializado(f);
-				arqserial.salvarSerial();
-			}
-		});
-		barraGravar.add(mntmSalvarSerial);
-
-		JMenuItem mntmSalvarTexto = new JMenuItem("Salvar (texto)");
-		mntmSalvarTexto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				File f = escolherArquivo();
-				if(f == null)
-					return;
-				arqtexto = new ArquivoTexto(f);
-				arqtexto.salvarTexto();
-			}
-		});
-		barraGravar.add(mntmSalvarTexto);
 
 		JMenu barraFiguras = new JMenu("Figuras");
 		menubar.add(barraFiguras);
@@ -215,7 +157,7 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				if(aux == true) {
 					FiguraGeometrica p = lerPonto();
 					p.setEstado(FiguraGeometrica.VERBOSE);
-					App.getApp().inserirFormaGeometrica(p);
+					doc.inserirFormaGeometrica(p);
 				}
 				Ponto ponto = new Ponto();
 				painel.setFormaGeometrica(ponto);
@@ -229,7 +171,7 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				if(aux ==true) {
 					FiguraGeometrica linha = new Linha(lerPonto(),lerPonto());
 					linha.setEstado(FiguraGeometrica.VERBOSE);
-					App.getApp().inserirFormaGeometrica(linha);
+					doc.inserirFormaGeometrica(linha);
 				}
 
 				Linha linha2 = new Linha();
@@ -244,22 +186,22 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 				if(aux ==true) {
 					FiguraGeometrica r = new Retangulo(lerPonto(),lerPonto());
 					r.setEstado(FiguraGeometrica.VERBOSE);
-					App.getApp().inserirFormaGeometrica(r);
+					doc.inserirFormaGeometrica(r);
 				}
 				Retangulo retangulo = new Retangulo();
 				painel.setFormaGeometrica(retangulo);
 			}
 		});
 		barraFiguras.add(mntmRetangulo);
-		
+
 		JMenuItem mntmcirculo = new JMenuItem("Circulo");
 		mntmcirculo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if(aux ==true) {
-				//	FiguraGeometrica r = new Retangulo(lerPonto(),lerPonto());
-					//r.setEstado(FiguraGeometrica.VERBOSE);
-					//App.getApp().inserirFormaGeometrica(r);
-			//	}
+				if(aux ==true) {
+					FiguraGeometrica c = new Circulo(lerPonto(),lerPonto());
+					c.setEstado(FiguraGeometrica.VERBOSE);
+					doc.inserirFormaGeometrica(c);
+				}
 				Circulo circulo = new Circulo();
 				painel.setFormaGeometrica(circulo);
 			}
@@ -276,13 +218,16 @@ public class FramePrincipal extends JFrame implements OuvinteLista{
 		return new Ponto(x,y);
 	}
 	public void atualizarFigura() {
+		repaint();
+	}
+	public void atualizarTexto() {
 		StringBuffer buffer = new StringBuffer();
-		Iterador<FiguraGeometrica> i = App.getApp().getIndice();
+		Iterador<FiguraGeometrica> i = doc.getIndice();
 		FiguraGeometrica f;
 		while((f = (FiguraGeometrica)i.proximo()) != null) {
 			buffer.append(f.toString()+"\n");
 		}
-		textArea.setText(buffer.toString());
+		texto.setText(buffer.toString());
 	}
 	public File escolherArquivo() {
 		JFileChooser fc = new JFileChooser();
