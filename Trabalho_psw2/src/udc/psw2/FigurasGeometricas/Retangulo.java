@@ -86,18 +86,6 @@ public class Retangulo extends FiguraGeometrica {
 	}
 
 	@Override
-	public float getX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float getY() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public void paint(Graphics g) {
 		int xa = (int) a.getX();
 		int xb = (int) b.getX();
