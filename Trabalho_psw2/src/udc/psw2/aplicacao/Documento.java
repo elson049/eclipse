@@ -58,7 +58,7 @@ public class Documento {
 		return;
 	}
 	public void LimparPainel() {
-		listaFiguras.limpar();
+		listaFiguras.removerTudo();
 		atualizarPaineis();
 	}
 	public void salvarFormas(File file) {
@@ -68,7 +68,7 @@ public class Documento {
 		String ext = name.substring(name.lastIndexOf('.') + 1);
 
 		// Determina qual algoritmo ser� utilizado, no padr�o Strategy
-		if (ext.compareTo("ser") == 0)
+		if (ext.compareTo("dat") == 0)
 			arq = new ArquivoSerializado(file);
 		if (ext.compareTo("txt") == 0)
 			arq = new ArquivoTexto(file);
@@ -87,7 +87,7 @@ public class Documento {
 		String ext = name.substring(name.lastIndexOf('.') + 1);
 
 		// Determina qual algoritmo ser� utilizado, no padr�o Strategy
-		if (ext.compareTo("ser") == 0)
+		if (ext.compareTo("dat") == 0)
 			arq = new ArquivoSerializado(file);
 		if (ext.compareTo("txt") == 0)
 			arq = new ArquivoTexto(file);
@@ -98,5 +98,8 @@ public class Documento {
 
 		// Uso do metodo Notify() do padr�o Observer
 		atualizarPaineis();
+	}
+	public int getQtdFiguras() {
+		return listaFiguras.getTamanho();
 	}
 }
