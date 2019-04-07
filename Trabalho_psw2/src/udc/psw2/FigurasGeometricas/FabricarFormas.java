@@ -14,6 +14,8 @@ public class FabricarFormas {
 			formaGeometrica = fabricarLinha(forma.substring(i+1));
 		else if (nome.equals(Retangulo.class.getSimpleName()))
 			formaGeometrica = fabricarRetangulo(forma.substring(i+1));
+		else if (nome.equals(Circulo.class.getSimpleName()))
+			formaGeometrica = fabricarCirculo(forma.substring(i+1));
 
 
 		return formaGeometrica;
@@ -56,6 +58,19 @@ public class FabricarFormas {
 		Retangulo r = new Retangulo(l1.getA().getX(),l1.getA().getY(),l2.getB().getX(),l2.getB().getY());
 		r.setEstado(FiguraGeometrica.VERBOSE);
 		return r;
+	}
+	public static Circulo fabricarCirculo(String circulo) {
+		String str1=null;
+		String str2=null;
+		int cont=0;
+		str1 = circulo.substring(circulo.indexOf(' '));
+		str2 = str1.substring(str1.indexOf(' ')+1);
+		cont = cont+str2.indexOf(' ')+str1.indexOf(' ')+circulo.indexOf(' ');
+		Ponto p1 = fabricarPonto(circulo.substring(0, cont+1)); 
+		Ponto p2 =fabricarPonto(circulo.substring(cont+2));
+		Circulo c = new Circulo(p1,p2);
+		c.setEstado(FiguraGeometrica.VERBOSE);
+		return c;
 	}
 
 }

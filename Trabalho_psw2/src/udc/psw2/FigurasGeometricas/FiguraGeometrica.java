@@ -19,8 +19,6 @@ public abstract  class FiguraGeometrica implements Serializable{
 	public abstract float comprimento();
 	public abstract float largura();
 	public abstract float perimetro();
-	public abstract float getX();
-	public abstract float getY();
 	public abstract void paint(Graphics g);
 	protected abstract String normalString();
 	protected abstract String verboselString();
