@@ -28,7 +28,7 @@ import udc.psw2.lista.Iterador;
 
 
 
-public class FramePrincipal extends JFrame{
+public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class FramePrincipal extends JFrame{
 
 
 		contentPane.setBackground(Color.WHITE); // configura cor de fundo
-		status = new JLabel( "�rea de mensagens!" );           
+		status = new JLabel( "Area de mensagens!" );           
 		contentPane.add( status, BorderLayout.SOUTH ); // adiciona r�tulo ao JFrame
 
 		painel = new Painel_desenhos(status,doc);
@@ -67,19 +67,19 @@ public class FramePrincipal extends JFrame{
 		texto = new Painel_texto(doc);
 		scrollTexto.setViewportView(texto);
 		texto.setEditable(false);
-		
+
 		// Adiciona objeto Observador na lista de observadores do objeto Subject do padr�o Observer
 		doc.adicionarOuvinte(texto);	
-		
+
 		setBounds(50, 50, 850, 650); // Posi��o e tamanho da janela
-		
+
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 
 		JMenu barraArquivo = new JMenu("Arquivo");
 		menubar.add(barraArquivo);
 
-		JMenuItem mntmDesenhando = new JMenuItem("Painel de Desenho");
+		JMenuItem mntmDesenhando = new JMenuItem("Desenho");
 		mntmDesenhando.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				painel.alterar(true,false);
@@ -88,7 +88,7 @@ public class FramePrincipal extends JFrame{
 		});
 		barraArquivo.add(mntmDesenhando);
 
-		JMenuItem mntmManual = new JMenuItem("Desenhar figuras com mouse");
+		JMenuItem mntmManual = new JMenuItem("Desenhar com mouse");
 		mntmManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				painel.alterar(false,false);
@@ -97,7 +97,7 @@ public class FramePrincipal extends JFrame{
 		});
 		barraArquivo.add(mntmManual);
 
-		JMenuItem mntmInserir = new JMenuItem("Inserir valores das coordenadas");
+		JMenuItem mntmInserir = new JMenuItem("Inserir valores");
 		mntmInserir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				aux=true;
@@ -106,38 +106,37 @@ public class FramePrincipal extends JFrame{
 		});
 		barraArquivo.add(mntmInserir);
 
-		JMenuItem mntmLimpar = new JMenuItem("Limpar painel");
+		JMenuItem mntmLimpar = new JMenuItem("Limpar");
 		mntmLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				doc.LimparPainel();
-				atualizarFigura();
-				atualizarTexto();
 				repaint();
 			}
 		});
 		barraArquivo.add(mntmLimpar);
 
-		JMenuItem mntmLer = new JMenuItem("Ler");
-		mntmLer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//File f = escolherArquivo();
-				//if(f == null)
-				//	return;
-			}
-
-		});
-		barraArquivo.add(mntmLer);
-
 		JMenuItem mntmSalvar = new JMenuItem("Salvar");
 		mntmSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				File f = escolherArquivo();
+				File f = escolherArquivo(true);
 				if(f == null)
 					return;
+				doc.salvarFormas(f);;
 			}
 		});
 		barraArquivo.add(mntmSalvar);
 
+		JMenuItem mntmLer = new JMenuItem("Ler");
+		mntmLer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				File f = escolherArquivo(false);
+				if(f == null)
+					return;
+				doc.lerFormas(f);
+			}
+
+		});
+		barraArquivo.add(mntmLer);
 
 		JMenuItem mntmSair = new JMenuItem("Sair");
 		mntmSair.addActionListener(new ActionListener() {
@@ -207,6 +206,7 @@ public class FramePrincipal extends JFrame{
 			}
 		});
 		barraFiguras.add(mntmcirculo);
+		
 	}
 	public static Ponto lerPonto() {
 		String strX = JOptionPane.showInputDialog("Digite o acoordenada x:");
@@ -217,10 +217,27 @@ public class FramePrincipal extends JFrame{
 
 		return new Ponto(x,y);
 	}
-	public void atualizarFigura() {
-		repaint();
+	public File escolherArquivo(boolean gravar) {
+		JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
+
+		FileNameExtensionFilter textFilterS = new FileNameExtensionFilter("Serial file", "dat");
+		fc.addChoosableFileFilter(textFilterS);
+		FileNameExtensionFilter textFilterT = new FileNameExtensionFilter("Text file", "txt");
+		fc.addChoosableFileFilter(textFilterT);
+		FileNameExtensionFilter textFilterB = new FileNameExtensionFilter("Binary file", "bin");
+		fc.addChoosableFileFilter(textFilterB);
+
+		fc.setFileFilter(textFilterT);
+
+		int result = gravar ? fc.showSaveDialog(null) : fc.showOpenDialog(null);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			return fc.getSelectedFile();
+		}
+		return null;
 	}
-	public void atualizarTexto() {
+	@Override
+	public void atualizar() {
 		StringBuffer buffer = new StringBuffer();
 		Iterador<FiguraGeometrica> i = doc.getIndice();
 		FiguraGeometrica f;
@@ -228,18 +245,6 @@ public class FramePrincipal extends JFrame{
 			buffer.append(f.toString()+"\n");
 		}
 		texto.setText(buffer.toString());
-	}
-	public File escolherArquivo() {
-		JFileChooser fc = new JFileChooser();
-		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 
-		FileNameExtensionFilter textFilter = new FileNameExtensionFilter("Serial file", "ser");
-		fc.setFileFilter(textFilter);
-
-		int result = fc.showOpenDialog(null);
-		if (result == JFileChooser.APPROVE_OPTION) {
-			return fc.getSelectedFile();
-		}
-		return null;
 	}
 }

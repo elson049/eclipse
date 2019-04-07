@@ -93,18 +93,6 @@ public class Linha  extends FiguraGeometrica {
 	}
 
 	@Override
-	public float getX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float getY() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public void paint(Graphics g) {
 		g.drawLine((int) a.getX(), (int) a.getY(), 
 				(int)b.getX(), (int) b.getY());
