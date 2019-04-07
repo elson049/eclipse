@@ -14,8 +14,6 @@ public class Circulo extends FiguraGeometrica{
 	private static final long serialVersionUID = 1L;
 	private Ponto a;
 	private Ponto b;
-	private Ponto centro;
-	private int raio;
 	
 	public Circulo() {
 		a = new Ponto();
@@ -64,16 +62,6 @@ public class Circulo extends FiguraGeometrica{
 		return 0;
 	}
 	@Override
-	public float getX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public float getY() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
 	public Circulo clone() {
 		return new Circulo(a,b);
 	}
@@ -87,9 +75,8 @@ public class Circulo extends FiguraGeometrica{
 		return new Ponto((a.getX()+b.getX())/2,(a.getY()+b.getY())/2);
 	}
 	public void paint(Graphics g) {
-		//g.drawArc((int)a.getX(),(int)a.getY(), width, height, startAngle, arcAngle);
-		g.drawOval((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)b.getY());
-		//g.drawOval((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)b.getY());
+		int raio = (int)comprimento()/2;
+		g.drawOval((int)centro().getX()-raio,(int)centro().getY()-raio,2*raio,2*raio);
 	}
 	public ManipuladorFormaGeometrica getManipulador() {
 		return new ManipuladorCirculo(this);
