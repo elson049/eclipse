@@ -9,37 +9,26 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
-import udc.psw2.aplicacao.App;
 import udc.psw2.lista.Iterador;
 import udc.psw2.lista.ListaEncadeada;
 
 public class ArquivoSerializado implements ArquivoFormasGeometrica{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private File file;
 	
 	public ArquivoSerializado(File file) {
 		this.file=file;
 	}
-	public void salvarSerial() {
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-
-			Iterador<FiguraGeometrica> it =App.getApp().getIndice();
-			FiguraGeometrica f;
-			f = it.getObject();
-			while (f!= null) {
-				oos.writeObject(f);
-				f = it.proximo();
-			}
-
-			oos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	public void lerSerial() {
-
-		while (!App.getApp().Lista_vazia()) {
-			App.getApp().EscruirInicio();
+	@Override
+	public ListaEncadeada<FiguraGeometrica> lerFormas() {
+		
+		ListaEncadeada<FiguraGeometrica> lista = new ListaEncadeada<FiguraGeometrica>();
+		
+		while (!lista.isEmpty()) {
+			lista.excluirInicio();
 		}
 		FiguraGeometrica formaAux1 = null;
 		ObjectInputStream ois = null;
@@ -48,8 +37,8 @@ public class ArquivoSerializado implements ArquivoFormasGeometrica{
 			ois = new ObjectInputStream(new FileInputStream(file));
 			while (true) {
 				formaAux1 = (FiguraGeometrica) ois.readObject();
-
-				App.getApp().inserirFormaGeometrica(formaAux1);
+				
+				lista.inserir(formaAux1,0);
 			}
 		} catch (EOFException endOfFileException) {
 			try {
@@ -62,15 +51,25 @@ public class ArquivoSerializado implements ArquivoFormasGeometrica{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-	@Override
-	public ListaEncadeada<FiguraGeometrica> lerFormas() {
-		// TODO Auto-generated method stub
-		return null;
+		return lista;
 	}
 	@Override
 	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {
-		// TODO Auto-generated method stub
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+
+			Iterador<FiguraGeometrica> it =lista.getInicio();
+			FiguraGeometrica f;
+			f = it.getObject();
+			while (f!= null) {
+				oos.writeObject(f);
+				f = it.proximo();
+			}
+
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 }
