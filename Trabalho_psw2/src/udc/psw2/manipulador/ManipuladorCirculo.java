@@ -12,32 +12,35 @@ public class ManipuladorCirculo implements ManipuladorFormaGeometrica{
 		this.circulo=circulo;
 	}
 	@Override
-	public void click(int x, int y) {
+	public boolean click(int x, int y) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
-	public void press(int x, int y) {
+	public boolean press(int x, int y) {
 		Ponto p = new Ponto(x, y);
 		circulo.setA(p);
 		p = new Ponto(x, y);
 		circulo.setB(p);
+		return false;
 	}
 
-	public void release(int x, int y) {
+	public boolean release(int x, int y) {
 		Ponto p = new Ponto(x, y);
 		circulo.setB(p);
+		return false;
 	}
 
-	public void drag(int x, int y) {
+	public boolean drag(int x, int y) {
 		Ponto p = new Ponto(x, y);
 		circulo.setB(p);
+		return false;
 	}
 
 	@Override
 	public void paint(Graphics g) {
-		g.drawOval((int)circulo.getA().getX(),(int)circulo.getA().getY(),(int)circulo.getB().getX(),(int)circulo.getB().getY());
-		
+		int raio = (int)circulo.comprimento()/2;
+		g.drawOval((int)circulo.centro().getX()-raio,(int)circulo.centro().getY()-raio,2*raio,2*raio);
 	}
 
 }
