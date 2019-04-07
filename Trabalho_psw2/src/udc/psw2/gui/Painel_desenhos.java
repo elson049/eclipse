@@ -53,12 +53,12 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	}
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		status.setText(String.format("Arrastou na  [%d, %d]",e.getX() , e.getY() ));
+		status.setText(String.format("Arrastou na  [%d, %d] Total de Figuras = %d",e.getX() , e.getY(),doc.getQtdFiguras() ));
 		if(aux == true && aux2 == false) {
 			FiguraGeometrica ponto = new Ponto((float)e.getX(),(float)e.getY());
 			ponto.setEstado(FiguraGeometrica.VERBOSE);
 			doc.inserirFormaGeometrica(ponto);
-			repaint();
+			atualizar();
 		}
 	}
 	public void setFormaGeometrica(FiguraGeometrica forma) {
@@ -75,25 +75,21 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	}
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		status.setText(String.format("Atual [%d, %d]",
-				e.getX() , e.getY() ));
+		status.setText(String.format("Atual [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		status.setText(String.format("Clicado na [%d, %d]",
-				e.getX() , e.getY() ));
+		status.setText(String.format("Clicado na [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
 		if (manipulador != null) {
 			manipulador.click(e.getX(), e.getY());
-
-			repaint();
+			atualizar();
 		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		status.setText(String.format("Mouse no Painel [%d, %d]",
-				e.getX() , e.getY() ));
+		status.setText(String.format("Mouse no Painel [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
 	}
 
 	@Override
@@ -104,8 +100,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		status.setText(String.format("Precionou [%d, %d]",
-				e.getX() , e.getY() ));
+		status.setText(String.format("Precionou [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
 		if (manipulador != null) {
 			manipulador.press(e.getX(), e.getY());
 
@@ -115,8 +110,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		status.setText(String.format("Released at [%d, %d]",
-				e.getX() , e.getY() ));
+		status.setText(String.format("Released at [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
 		if (desenhando && aux == false && aux2 == false) {
 			manipulador.release(e.getX(), e.getY());
 			forma.setEstado(FiguraGeometrica.VERBOSE);
@@ -127,7 +121,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 			forma = forma.clone();
 			manipulador = forma.getManipulador();
 
-			repaint();
+			atualizar();
 		}
 	}
 	public void atualizar() {
