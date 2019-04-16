@@ -38,7 +38,8 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 	private Documento doc;
 	private JPanel contentPane;
 	private boolean aux=false;
-
+	
+	//criação do frame
 	public FramePrincipal(Documento doc) {
 		this.doc=doc;
 

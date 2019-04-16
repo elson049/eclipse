@@ -23,7 +23,7 @@ public class ArquivoSerializado implements ArquivoFormasGeometrica{
 		this.file=file;
 	}
 	@Override
-	public ListaEncadeada<FiguraGeometrica> lerFormas() {
+	public ListaEncadeada<FiguraGeometrica> lerFormas() {//ler arquivo serializado
 		
 		ListaEncadeada<FiguraGeometrica> lista = new ListaEncadeada<FiguraGeometrica>();
 		
@@ -54,7 +54,7 @@ public class ArquivoSerializado implements ArquivoFormasGeometrica{
 		return lista;
 	}
 	@Override
-	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {
+	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {//gravar arquivo serializado
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 

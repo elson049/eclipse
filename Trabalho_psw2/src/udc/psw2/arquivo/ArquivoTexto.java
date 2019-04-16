@@ -18,7 +18,7 @@ public  class ArquivoTexto implements ArquivoFormasGeometrica{
 		this.file=file;
 	}
 	@Override
-	public ListaEncadeada<FiguraGeometrica> lerFormas() {
+	public ListaEncadeada<FiguraGeometrica> lerFormas() {//ler arquivo texto
 		
 		ListaEncadeada<FiguraGeometrica> lista = new ListaEncadeada<FiguraGeometrica>();
 		
@@ -42,7 +42,7 @@ public  class ArquivoTexto implements ArquivoFormasGeometrica{
 		return lista;
 	}
 	@Override
-	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {
+	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {//gravar arquivo texto
 		FileWriter output;
 
 		try {

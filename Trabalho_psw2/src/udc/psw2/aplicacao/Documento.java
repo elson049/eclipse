@@ -12,6 +12,7 @@ import java.io.File;
 
 public class Documento {
 	private ListaEncadeada<FiguraGeometrica> listaFiguras;
+	//lista de Ouvintes
 	private ListaEncadeada<PainelOuvinteForma> OuvintePainel;
 	
 	private static Documento doc;
@@ -26,16 +27,17 @@ public class Documento {
 			doc= new Documento();
 		return doc;
 	}
-	
+	//adicionar ouvinte
 	public void adicionarOuvinte(PainelOuvinteForma painel) {
 		OuvintePainel.inserirInicio(painel);
 		atualizarPaineis();
 	}
+	//exluir um ouvinte
 	public void excluirOuvinte(PainelOuvinteForma painel){
 		OuvintePainel.remover(painel);
 		atualizarPaineis();
 	}
-	
+	// Metodo notifica outros paineis
 	public void atualizarPaineis() {
 		Iterador<PainelOuvinteForma> i =OuvintePainel.getInicio();
 		PainelOuvinteForma painel;
@@ -43,10 +45,12 @@ public class Documento {
 			painel.atualizar();
 		}
 	}
+	//inserir figura geometrica 
 	public void inserirFormaGeometrica(FiguraGeometrica forma) {
 		listaFiguras.inserir(forma,0);
 		atualizarPaineis();
 	}
+	//retorna interador lista
 	public Iterador<FiguraGeometrica> getIndice() {
 		return listaFiguras.getInicio();
 	}
@@ -61,39 +65,39 @@ public class Documento {
 		listaFiguras.removerTudo();
 		atualizarPaineis();
 	}
+	//
 	public void salvarFormas(File file) {
 		ArquivoFormasGeometrica arq = null;
 
 		String name = file.getName();
 		String ext = name.substring(name.lastIndexOf('.') + 1);
 
-		// Determina qual algoritmo ser� utilizado, no padr�o Strategy
+		// Determina qual algoritmo ser utilizado
 		if (ext.compareTo("dat") == 0)
 			arq = new ArquivoSerializado(file);
 		if (ext.compareTo("txt") == 0)
 			arq = new ArquivoTexto(file);
 		if (ext.compareTo("bin") == 0)
 			arq = new ArquivoBinario(file);
-		// Uso do metodo AlgorithmInterface() da classe Strategy
+		// Uso do metodo AlgorithmInterface()
 		arq.salvarFormas(listaFiguras);
 
 	}
 
-	// Metodo ContextInterface da classe Context no padr�o Strategy
 	public void lerFormas(File file) {
 		ArquivoFormasGeometrica arq = null;
 
 		String name = file.getName();
 		String ext = name.substring(name.lastIndexOf('.') + 1);
 
-		// Determina qual algoritmo ser� utilizado, no padr�o Strategy
+		// Determina qual algoritmo ser utilizado
 		if (ext.compareTo("dat") == 0)
 			arq = new ArquivoSerializado(file);
 		if (ext.compareTo("txt") == 0)
 			arq = new ArquivoTexto(file);
 		if (ext.compareTo("bin") == 0)
 			arq = new ArquivoBinario(file);
-		// Uso do metodo AlgorithmInterface() da classe Strategy
+		// Uso do metodo AlgorithmInterface()
 		listaFiguras = arq.lerFormas();
 
 		// Uso do metodo Notify() do padr�o Observer

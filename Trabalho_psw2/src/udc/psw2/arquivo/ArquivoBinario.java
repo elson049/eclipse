@@ -24,7 +24,7 @@ public class ArquivoBinario implements ArquivoFormasGeometrica{
 		this.file=file;
 	}
 	@Override
-	public ListaEncadeada<FiguraGeometrica> lerFormas() {
+	public ListaEncadeada<FiguraGeometrica> lerFormas() {//ler arquivo binario
 		ListaEncadeada<FiguraGeometrica> lista = new ListaEncadeada<FiguraGeometrica>();
 
 		try {
@@ -73,7 +73,7 @@ public class ArquivoBinario implements ArquivoFormasGeometrica{
 	}
 
 	@Override
-	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {
+	public void salvarFormas(ListaEncadeada<FiguraGeometrica> lista) {//ler arquivo binario
 		try {
 			raf = new RandomAccessFile(file,"rw");
 		}catch (FileNotFoundException e) {
