@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import udc.psw2.FigurasGeometricas.Circulo;
-import udc.psw2.FigurasGeometricas.FabricarFormas;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Linha;
 import udc.psw2.FigurasGeometricas.Ponto;
@@ -36,8 +35,8 @@ public class ArquivoBinario implements ArquivoFormasGeometrica{
 		while(true){
 			try {
 
-				raf.readByte();
-				float op = (float)raf.readInt();
+				//raf.readByte();
+				int op = raf.readInt();
 				if(op == 1) {// ler Ponto
 					Ponto a = new Ponto((float)raf.readInt(),(float)raf.readInt());
 					a.setEstado(FiguraGeometrica.VERBOSE);
@@ -82,20 +81,19 @@ public class ArquivoBinario implements ArquivoFormasGeometrica{
 		}
 		try {
 			Iterador<FiguraGeometrica> it =lista.getInicio();
-			FiguraGeometrica f;
-			while((f = (FiguraGeometrica)it.proximo()) != null) {
-				FiguraGeometrica forma = FabricarFormas.fabricarFormaGeometrica(f.toString());
+			FiguraGeometrica forma;
+			while((forma = (FiguraGeometrica)it.proximo()) != null) {
 				int i = forma.toString().indexOf(' ');
 				String nome = forma.toString().substring(0, i);
 				if(nome.equals("Ponto")) {
 					Ponto ponto = (Ponto)forma;
-					raf.writeByte(1);
+					//raf.writeByte(1);
 					raf.writeInt(1);
 					raf.writeInt((int)ponto.getX());
 					raf.writeInt((int)ponto.getY());
 				}else if (nome.equals("Linha")) {
 					Linha linha = (Linha)forma;
-					raf.writeByte(1);
+					//raf.writeByte(1);
 					raf.writeInt(2);
 					raf.writeInt((int)linha.getA().getX());
 					raf.writeInt((int)linha.getA().getY());
@@ -103,7 +101,7 @@ public class ArquivoBinario implements ArquivoFormasGeometrica{
 					raf.writeInt((int)linha.getB().getY());
 				}else if (nome.equals("Retangulo")) {
 					Retangulo retangulo = (Retangulo)forma;
-					raf.writeByte(1);
+					//raf.writeByte(1);
 					raf.writeInt(3);
 					raf.writeInt((int)retangulo.getA().getX());
 					raf.writeInt((int)retangulo.getA().getY());
@@ -116,7 +114,7 @@ public class ArquivoBinario implements ArquivoFormasGeometrica{
 
 				}else if (nome.equals("Circulo")) {
 					Circulo circulo = (Circulo)forma;
-					raf.writeByte(1);
+					//raf.writeByte(1);
 					raf.writeInt(4);
 					raf.writeInt((int)circulo.getA().getX());
 					raf.writeInt((int)circulo.getA().getY());
