@@ -1,6 +1,8 @@
 package udc.psw2.aplicacao;
 
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
+import udc.psw2.FigurasGeometricas.Linha;
+import udc.psw2.FigurasGeometricas.Ponto;
 import udc.psw2.arquivo.ArquivoBinario;
 import udc.psw2.arquivo.ArquivoFormasGeometrica;
 import udc.psw2.arquivo.ArquivoSerializado;
@@ -50,6 +52,10 @@ public class Documento {
 		listaFiguras.inserir(forma,0);
 		atualizarPaineis();
 	}
+	public void excluirFormaGeometrica(FiguraGeometrica forma) {
+		listaFiguras.remover(forma);
+		atualizarPaineis();
+	}
 	//retorna interador lista
 	public Iterador<FiguraGeometrica> getIndice() {
 		return listaFiguras.getInicio();
@@ -65,7 +71,24 @@ public class Documento {
 		listaFiguras.removerTudo();
 		atualizarPaineis();
 	}
-	//
+	public FiguraGeometrica buscarFigura(Ponto ponto) {
+		Iterador<FiguraGeometrica> i =listaFiguras.getInicio();
+		FiguraGeometrica figura;
+		while((figura = (FiguraGeometrica)i.proximo()) != null) {
+			int j = figura.toString().indexOf(' ');
+			String nome = figura.toString().substring(0, j);
+			if (nome.equals("Ponto")) {
+				Ponto p = (Ponto)figura;
+				if(p.getX() == ponto.getX() && p.getY() == ponto.getY())
+					return figura;
+			}else if(nome.equals("Linha")) {
+				Linha l = (Linha)figura;
+				if(l.getA().getX() == ponto.getX() && l.getA().getY() == ponto.getY())
+					return figura;
+			}
+		}
+		return null;
+	}
 	public void salvarFormas(File file) {
 		ArquivoFormasGeometrica arq = null;
 

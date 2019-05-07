@@ -22,6 +22,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	private static final long serialVersionUID = 1L;
 	private JLabel status;
 	private boolean desenhando = false;
+	private boolean apagando = false;
 	private boolean aux=false;
 	private boolean aux2=false;
 	private ManipuladorFormaGeometrica manipulador;
@@ -33,6 +34,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		this.doc=doc;
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
+		desenhando=false;
 	}
 	@Override
 	public void paintComponent(Graphics g) {
@@ -44,7 +46,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 		Iterador<FiguraGeometrica> i =doc.getIndice();
 		FiguraGeometrica f;
 		while((f = (FiguraGeometrica)i.proximo()) != null) {
-			f.paint(g);
+			f.getManipulador().paint(g);
 		}
 	}
 	public void alterar(boolean aux,boolean aux2) {
@@ -54,11 +56,13 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		status.setText(String.format("Arrastou na  [%d, %d] Total de Figuras = %d",e.getX() , e.getY(),doc.getQtdFiguras() ));
-		if(aux == true && aux2 == false) {
+		if(aux == true && aux2 == false && apagando == false) {
 			FiguraGeometrica ponto = new Ponto((float)e.getX(),(float)e.getY());
 			ponto.setEstado(FiguraGeometrica.VERBOSE);
 			doc.inserirFormaGeometrica(ponto);
-			atualizar();
+		}else if (desenhando) {
+			manipulador.drag(e.getX(), e.getY());
+			repaint();
 		}
 	}
 	public void setFormaGeometrica(FiguraGeometrica forma) {
@@ -73,6 +77,9 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	public void setDesenhando(boolean desenhando) {
 		this.desenhando = desenhando;
 	}
+	public void setApagando(boolean apagando) {
+		this.apagando = apagando;
+	}
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		status.setText(String.format("Atual [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
@@ -82,8 +89,13 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	public void mouseClicked(MouseEvent e) {
 		status.setText(String.format("Clicado na [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
 		if (manipulador != null) {
-			manipulador.click(e.getX(), e.getY());
-			atualizar();
+			if(apagando) {
+				Ponto p = new Ponto(e.getX(),e.getY());
+				FiguraGeometrica f = doc.buscarFigura(p);
+				doc.excluirFormaGeometrica(f);
+			}else {
+				manipulador.click(e.getX(), e.getY());
+			}
 		}
 	}
 
@@ -101,7 +113,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	@Override
 	public void mousePressed(MouseEvent e) {
 		status.setText(String.format("Precionou [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
-		if (manipulador != null) {
+		if (manipulador != null && apagando == false) {
 			manipulador.press(e.getX(), e.getY());
 
 			desenhando = true;
@@ -111,7 +123,7 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		status.setText(String.format("Released at [%d, %d] Total de Figuras = %d",e.getX(),e.getY(),doc.getQtdFiguras() ));
-		if (desenhando && aux == false && aux2 == false) {
+		if (desenhando && aux == false && aux2 == false && apagando == false) {
 			manipulador.release(e.getX(), e.getY());
 			forma.setEstado(FiguraGeometrica.VERBOSE);
 			doc.inserirFormaGeometrica(forma);
@@ -121,12 +133,11 @@ public class Painel_desenhos extends JPanel implements MouseMotionListener, Mous
 			forma = forma.clone();
 			manipulador = forma.getManipulador();
 
-			atualizar();
 		}
 	}
 	public void atualizar() {
 		repaint();
-		
+
 	}
 }
 

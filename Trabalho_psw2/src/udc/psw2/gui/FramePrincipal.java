@@ -38,7 +38,7 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 	private Documento doc;
 	private JPanel contentPane;
 	private boolean aux=false;
-	
+
 	//criação do frame
 	public FramePrincipal(Documento doc) {
 		this.doc=doc;
@@ -84,7 +84,7 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 		mntmDesenhando.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				painel.alterar(true,false);
-				repaint();
+				painel.setApagando(false);
 			}
 		});
 		barraArquivo.add(mntmDesenhando);
@@ -93,7 +93,7 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 		mntmManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				painel.alterar(false,false);
-				repaint();
+				painel.setApagando(false);
 			}
 		});
 		barraArquivo.add(mntmManual);
@@ -107,11 +107,20 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 		});
 		barraArquivo.add(mntmInserir);
 
+		JMenuItem mntmBorracha = new JMenuItem("Borracha");
+		mntmBorracha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Ponto ponto = new Ponto();
+				painel.setApagando(true);
+				painel.setFormaGeometrica(ponto);
+			}
+		});
+		barraArquivo.add(mntmBorracha);
+
 		JMenuItem mntmLimpar = new JMenuItem("Limpar");
 		mntmLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				doc.LimparPainel();
-				repaint();
 			}
 		});
 		barraArquivo.add(mntmLimpar);
@@ -207,7 +216,7 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 			}
 		});
 		barraFiguras.add(mntmcirculo);
-		
+
 	}
 	public static Ponto lerPonto() {
 		String strX = JOptionPane.showInputDialog("Digite o acoordenada x:");
