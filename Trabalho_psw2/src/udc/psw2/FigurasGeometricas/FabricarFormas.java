@@ -3,6 +3,7 @@ package udc.psw2.FigurasGeometricas;
 public class FabricarFormas {
 
 	public static FiguraGeometrica fabricarFormaGeometrica(String forma) {
+		
 		int i = forma.indexOf(' ');
 		String nome = forma.substring(0, i);
 
@@ -42,6 +43,7 @@ public class FabricarFormas {
 		return p;
 	}
 	public static Retangulo fabricarRetangulo(String retangulo) {
+		
 		String str1=null; 
 		String str2=null; 
 		String str3=null; 

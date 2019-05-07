@@ -1,7 +1,5 @@
 package udc.psw2.FigurasGeometricas;
 
-import java.awt.Graphics;
-
 import udc.psw2.manipulador.ManipuladorFormaGeometrica;
 import udc.psw2.manipulador.ManipuladorPonto;
 
@@ -68,9 +66,9 @@ public class Ponto extends FiguraGeometrica{
 	public float perimetro(){
 		return 0;
 	}
-	public void paint(Graphics g) {
-		g.fillOval((int)x,(int)y,4, 4);
-	}
+	//long 8 bit
+	//int 4 bit
+	//16 
 
 	public ManipuladorFormaGeometrica getManipulador() {
 		return new ManipuladorPonto(this);

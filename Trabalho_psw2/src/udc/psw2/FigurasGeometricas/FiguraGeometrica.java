@@ -1,6 +1,5 @@
 package udc.psw2.FigurasGeometricas;
 
-import java.awt.Graphics;
 import java.io.Serializable;
 
 import udc.psw2.manipulador.ManipuladorFormaGeometrica;
@@ -19,7 +18,6 @@ public abstract  class FiguraGeometrica implements Serializable{
 	public abstract float comprimento();
 	public abstract float largura();
 	public abstract float perimetro();
-	public abstract void paint(Graphics g);
 	protected abstract String normalString();
 	protected abstract String verboselString();
 	

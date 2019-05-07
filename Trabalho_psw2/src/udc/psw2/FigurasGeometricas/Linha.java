@@ -1,5 +1,4 @@
 package udc.psw2.FigurasGeometricas;
-import java.awt.Graphics;
 
 import udc.psw2.manipulador.ManipuladorFormaGeometrica;
 import udc.psw2.manipulador.ManipuladorLinha;
@@ -90,12 +89,6 @@ public class Linha  extends FiguraGeometrica {
 	public float largura() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		g.drawLine((int) a.getX(), (int) a.getY(), 
-				(int)b.getX(), (int) b.getY());
 	}
 
 	protected  String normalString() {

@@ -1,7 +1,5 @@
 package udc.psw2.FigurasGeometricas;
 
-import java.awt.Graphics;
-
 import udc.psw2.manipulador.ManipuladorFormaGeometrica;
 import udc.psw2.manipulador.ManipuladorRetangulo;
 
@@ -85,15 +83,6 @@ public class Retangulo extends FiguraGeometrica {
 		return 0;
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		int xa = (int) a.getX();
-		int xb = (int) b.getX();
-		int ya = (int) a.getY();
-		int yb = (int) b.getY();
-		g.drawRect(xa < xb ? xa : xb, ya < yb ? ya : yb, 
-				(int) base(), (int) altura() );
-	}
 	protected String normalString() {
 		return String.format("%d %d %d %d %d %d %d %d",(int)a.getX(),(int)a.getY(),(int)b.getX(),(int)a.getY(),(int)a.getX(),(int)b.getY(),(int)b.getX(),(int)b.getY());
 	}
