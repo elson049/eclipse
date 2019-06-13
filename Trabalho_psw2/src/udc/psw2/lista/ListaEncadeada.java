@@ -114,7 +114,23 @@ public class ListaEncadeada<Tipo> {
 		iteracoes++;
 		tamanho++;
 	}
+	public void inserirFim(ListaEncadeada<Tipo> lista) {
+		No aux = lista.inicio;
+		while(aux != null) {
+			No novo = new No();
+			novo.obj = aux.obj;
+			novo.proximo = null;
+			novo.anterior = fim;
 
+			if (fim != null)
+				fim.proximo = novo;
+			fim = novo;
+			if (inicio == null)
+				inicio = novo;
+			tamanho++;
+			aux = aux.proximo;
+		}
+	}
 	public void inserir(Tipo obj, int indice){
 		if(indice == 0){
 			inserirInicio(obj);
