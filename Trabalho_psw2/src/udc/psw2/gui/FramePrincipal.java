@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import udc.psw2.DAO.entidade.Desenhos;
 import udc.psw2.FigurasGeometricas.Circulo;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Linha;
@@ -124,18 +125,7 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 			}
 		});
 		barraArquivo.add(mntmLimpar);
-
-		JMenuItem mntmSalvar = new JMenuItem("Salvar");
-		mntmSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				File f = escolherArquivo(true);
-				if(f == null)
-					return;
-				doc.salvarFormas(f);;
-			}
-		});
-		barraArquivo.add(mntmSalvar);
-
+		
 		JMenuItem mntmLer = new JMenuItem("Ler");
 		mntmLer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -147,6 +137,40 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 
 		});
 		barraArquivo.add(mntmLer);
+		
+		JMenuItem mntmSalvar = new JMenuItem("Salvar");
+		mntmSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = escolherArquivo(true);
+				if(f == null)
+					return;
+				doc.salvarFormas(f);;
+			}
+		});
+		barraArquivo.add(mntmSalvar);
+				
+		JMenuItem mntmLerBD = new JMenuItem("Ler BD");
+		mntmLerBD.setMnemonic('e');
+		mntmLerBD.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Desenhos desenho = lerDesenho();
+				if(desenho == null)
+					return;
+					doc.lerBD(desenho.getNome());
+			}
+		});
+		barraArquivo.add(mntmLerBD);
+		
+		JMenuItem mntmSalvarBD = new JMenuItem("Salvar BD");
+		mntmSalvarBD.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					Desenhos desenho = lerDesenho();
+					if(desenho == null)
+						return;
+					doc.salvarBD(desenho.getNome());
+			}
+		});
+		barraArquivo.add(mntmSalvarBD);
 
 		JMenuItem mntmSair = new JMenuItem("Sair");
 		mntmSair.addActionListener(new ActionListener() {
@@ -226,6 +250,11 @@ public class FramePrincipal extends JFrame implements PainelOuvinteForma{
 		float y= Float.parseFloat(strY);
 
 		return new Ponto(x,y);
+	}
+	public static Desenhos lerDesenho() {
+		String strD = JOptionPane.showInputDialog("Digite nome do Desenho:");
+
+		return new Desenhos(0,strD);
 	}
 	public File escolherArquivo(boolean gravar) {
 		JFileChooser fc = new JFileChooser();
