@@ -1,8 +1,16 @@
 package udc.psw2.aplicacao;
 
+import udc.psw2.DAO.CirculoDAO;
+import udc.psw2.DAO.DesenhosDAO;
+import udc.psw2.DAO.LinhaDAO;
+import udc.psw2.DAO.PontoDAO;
+import udc.psw2.DAO.RetanguloDAO;
+import udc.psw2.DAO.entidade.Desenhos;
+import udc.psw2.FigurasGeometricas.Circulo;
 import udc.psw2.FigurasGeometricas.FiguraGeometrica;
 import udc.psw2.FigurasGeometricas.Linha;
 import udc.psw2.FigurasGeometricas.Ponto;
+import udc.psw2.FigurasGeometricas.Retangulo;
 import udc.psw2.arquivo.ArquivoBinario;
 import udc.psw2.arquivo.ArquivoFormasGeometrica;
 import udc.psw2.arquivo.ArquivoSerializado;
@@ -11,6 +19,7 @@ import udc.psw2.gui.PainelOuvinteForma;
 import udc.psw2.lista.Iterador;
 import udc.psw2.lista.ListaEncadeada;
 import java.io.File;
+import java.sql.SQLException;
 
 public class Documento {
 	private ListaEncadeada<FiguraGeometrica> listaFiguras;
@@ -124,6 +133,67 @@ public class Documento {
 		listaFiguras = arq.lerFormas();
 
 		// Uso do metodo Notify() do padrï¿½o Observer
+		atualizarPaineis();
+	}
+	public void salvarBD(String nomeDesenho) {
+		DesenhosDAO desenhosDAO = new DesenhosDAO();
+		Desenhos desenho = new Desenhos(0,nomeDesenho);
+
+		try {
+			desenhosDAO.insert(desenho);
+		} catch (IllegalStateException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		PontoDAO pontoDAO = new PontoDAO((int) desenho.getId());
+		LinhaDAO linhaDAO = new LinhaDAO((int) desenho.getId());
+		RetanguloDAO retanguloDAO = new RetanguloDAO((int) desenho.getId());
+		CirculoDAO circuloDAO = new CirculoDAO((int) desenho.getId());
+
+		Iterador<FiguraGeometrica> i = listaFiguras.getInicio();
+		FiguraGeometrica forma;
+		
+		try {
+			while ((forma = (FiguraGeometrica) i.proximo()) != null) {
+				if (forma.getClass().equals(Ponto.class)) {
+						pontoDAO.insert((Ponto) forma);
+				}
+				if (forma.getClass().equals(Linha.class)) {
+						linhaDAO.insert((Linha) forma);
+				}
+				if (forma.getClass().equals(Retangulo.class)) {
+						retanguloDAO.insert((Retangulo) forma);
+				}
+				if (forma.getClass().equals(Circulo.class)) {
+						circuloDAO.insert((Circulo) forma);
+				}
+			}
+		} catch (IllegalStateException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void lerBD(String nomeDesenho) {
+		DesenhosDAO desenhosDAO = new DesenhosDAO();
+		Desenhos desenho = null;
+
+		listaFiguras.removerTudo();
+
+		desenho = desenhosDAO.find(nomeDesenho);
+		if (desenho == null)
+			return;
+
+		PontoDAO pontoDAO = new PontoDAO((int) desenho.getId());
+		LinhaDAO linhaDAO = new LinhaDAO((int) desenho.getId());
+		RetanguloDAO retanguloDAO = new RetanguloDAO((int) desenho.getId());
+		CirculoDAO circuloDAO = new CirculoDAO((int) desenho.getId());
+		
+		listaFiguras.inserirFim(pontoDAO.getLista());
+		listaFiguras.inserirFim(linhaDAO.getLista());
+		listaFiguras.inserirFim(retanguloDAO.getLista());
+		listaFiguras.inserirFim(circuloDAO.getLista());
+		
+		// Uso do metodo Notify() do padrão Observer
 		atualizarPaineis();
 	}
 	public int getQtdFiguras() {
