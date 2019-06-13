@@ -89,6 +89,7 @@ public class RetanguloDAO {
 				return lista;
 			while(!resultSet.isAfterLast()) {
 				Retangulo ret = getRetangulo();
+				ret.setEstado(FiguraGeometrica.VERBOSE);
 				if(ret != null)
 					lista.inserirFim(ret);
 				resultSet.next();

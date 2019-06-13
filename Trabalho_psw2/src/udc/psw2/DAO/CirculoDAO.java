@@ -89,6 +89,7 @@ public class CirculoDAO {
 				return lista;			
 			while(!resultSet.isAfterLast()) {
 				Circulo circ = getCirculo();
+				circ.setEstado(FiguraGeometrica.VERBOSE);
 				if(circ != null)
 					lista.inserirFim(circ);
 				resultSet.next();

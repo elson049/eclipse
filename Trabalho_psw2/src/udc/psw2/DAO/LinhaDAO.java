@@ -89,6 +89,7 @@ public class LinhaDAO {
 				return lista;
 			while(!resultSet.isAfterLast()) {
 				Linha linha = getLinha();
+				linha.setEstado(FiguraGeometrica.VERBOSE);
 				if(linha != null)
 					lista.inserirFim(linha);
 				resultSet.next();

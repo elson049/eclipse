@@ -87,6 +87,7 @@ public class PontoDAO {
 				return lista;
 			while(!resultSet.isAfterLast()) {
 				Ponto ponto = getPonto();
+				ponto.setEstado(FiguraGeometrica.VERBOSE);
 				if(ponto != null)
 					lista.inserirFim(ponto);
 				resultSet.next();
