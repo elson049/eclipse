@@ -21,6 +21,10 @@ public class Circulo extends FiguraGeometrica{
 		this.a=a.clone();
 		this.b=b.clone();
 	}
+	public Circulo(float ax, float ay, float bx, float by){
+		a = new Ponto(ax, ay);
+		b = new Ponto(bx, by);
+	}
 	public Ponto getA() {
 		return a;
 	}
